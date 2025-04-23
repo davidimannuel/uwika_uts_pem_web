@@ -1,0 +1,22 @@
+services:
+  go_todo_app_postgres:
+    container_name: go_todo_app_postgres
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: s3cret
+      POSTGRES_DB: postgres
+    volumes:
+      - ./docker_volumes/postgresql/init/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./docker_volumes/postgresql/data:/var/lib/postgresql/data #local_machine:internal_docker
+    ports:
+      - 5432:5432 #local_machine_port:internal_docker_container_port
+    deploy:
+      # resources:
+      #   limits:
+      #     cpus: '2'
+      #     memory: 512M
+      #   reservations:
+      #     cpus: '1'
+      #     memory: 256M

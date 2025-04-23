@@ -1,0 +1,9 @@
+milih study case bebas ? (saya pilih Case studies 1)
+perlu authentikasi ?
+jika perlu autentikasi apaah user boleh harcode ?
+boleh pakek framework ?
+
+resources tutorial PHP MVC laracasts (dari laravel):
+- https://www.youtube.com/playlist?list=PL3VM-unCzF8ipG50KDjnzhugceoSG3RTC
+- https://www.youtube.com/watch?v=fw5ObX8P6as&t=5278s&pp=ygUPcGhwIGZ1bGwgY291cnNl
+- https://github.com/laracasts/PHP-For-Beginners-Series
