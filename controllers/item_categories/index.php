@@ -1,9 +1,12 @@
 <?php
 
-$config = require("config.php");
+$config = require basePath("config.php");
 
 $db = new Database($config['database']);
 $categories = $db->query("SELECT * FROM item_categories")->get();
 // dd($categories);
 
-require "views/categories.view.php";
+
+view("item_categories/index.view.php", [
+    "categories" => $categories
+]);

@@ -1,6 +1,6 @@
 <?php
 
-$config = require("config.php");
+$config = require basePath("config.php");
 
 $db = new Database($config['database']);
 
@@ -12,4 +12,6 @@ if (!$categoryId) {
 $category = $db->query("SELECT * FROM item_categories where id = :id",[':id' => $categoryId])->findOrFail();
 // dd($category);
 
-require "views/category.view.php";
+view("item_categories/show.view.php", [
+    "category" => $category
+]);

@@ -1,15 +1,15 @@
-<?php require "views/partials/head.php"; ?>
+<?php require basePath("views/partials/head.php"); ?>
   
-<?php require "views/partials/nav.php"; ?>
+<?php require basePath("views/partials/nav.php"); ?>
   
 <div class="container mt-4">
   <!-- Your content goes here -->
   <h1>Category Management</h1>
-  <a href="/category/create">Create Category</a>
+  <a href="/item-categories/create">Create Category</a>
   <ul>
     <?php foreach ($categories as $category): ?>
       <li>
-        <a href="/category?id=<?= $category['id'] ?>">
+        <a href="/item-category?id=<?= $category['id'] ?>">
           <?= htmlspecialchars($category['name']) ?>
         </a>
       </li>
@@ -17,4 +17,4 @@
   </ul>
 </div>
   
-<?php require "views/partials/foot.php"; ?>
+<?php require basePath("views/partials/foot.php"); ?>

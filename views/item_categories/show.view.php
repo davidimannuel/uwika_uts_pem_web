@@ -1,6 +1,6 @@
-<?php require "views/partials/head.php"; ?>
+<?php require basePath("views/partials/head.php"); ?>
   
-<?php require "views/partials/nav.php"; ?>
+<?php require basePath("views/partials/nav.php"); ?>
   
 <div class="container mt-4">
   <!-- Your content goes here -->
@@ -8,4 +8,4 @@
   <p>Category : <?= htmlspecialchars($category["name"])?></p>
 </div>
   
-<?php require "views/partials/foot.php"; ?>
+<?php require basePath("views/partials/foot.php"); ?>

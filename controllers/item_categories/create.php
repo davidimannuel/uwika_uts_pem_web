@@ -1,11 +1,14 @@
 <?php
-$config = require("config.php");
-require "Validator.php";
+
+$config = require basePath("config.php");
+
+require basePath("Validator.php");
 
 $db = new Database($config['database']);
 
+$errors = [];
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  $errors = [];
   // dd($_POST);  
   $name = $_POST["name"];
   
@@ -24,4 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   }
 }
 
-require "views/category_create.view.php";
+view("item_categories/create.view.php",[
+  "errors" => $errors,
+]);

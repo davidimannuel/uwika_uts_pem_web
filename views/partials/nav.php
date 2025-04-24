@@ -10,7 +10,7 @@
           <a class="nav-link <?=  urlIs("/") ? 'active' : '' ?> "href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?=  urlIs("/categories") ? 'active' : '' ?>" href="categories">Categories</a>
+          <a class="nav-link <?=  urlIs("/item-categories") ? 'active' : '' ?>" href="/item-categories">Item Categories</a>
         </li>
         <li class="nav-item">
           <a class="nav-link <?=  urlIs("/items") ? 'active' : '' ?>" href="/items">Items</a>
