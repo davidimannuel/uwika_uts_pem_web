@@ -1,4 +1,4 @@
-<?php require "views/partials/head.php"; ?>
+<?php require basePath("views/partials/head.php"); ?>
   
   
 <div class="container mt-4">
@@ -7,4 +7,4 @@
   <p><a href="/">Go back to the homepage</a></p>
 </div>
   
-<?php require "views/partials/foot.php"; ?>
+<?php require basePath("views/partials/foot.php"); ?>

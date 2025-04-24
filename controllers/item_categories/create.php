@@ -1,10 +1,9 @@
 <?php
+use Core\App;
+use Core\Database;
+use Core\Validator;
 
-$config = require basePath("config.php");
-
-require basePath("Validator.php");
-
-$db = new Database($config['database']);
+$db = App::resolve(Database::class);
 
 $errors = [];
 
@@ -22,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     ]);
     
     // Redirect to the categories page
-    header("Location: /categories");
+    header("Location: /item-categories");
     exit;
   }
 }

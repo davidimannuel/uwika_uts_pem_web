@@ -1,16 +1,18 @@
 <?php 
 
-$routes = require("routes.php");
+$routes = require basePath("routes.php");
+
+use Core\Response;
 
 function abort($code = Response::INTERNAL_SERVER_ERROR) {
   http_response_code($code);
-  require "views/errors/{$code}.view.php";
+  require basePath("views/errors/{$code}.view.php");
   die();
 }
  
 function routeToController($uri, $routes) {
   if (array_key_exists($uri, $routes)) {
-    require $routes[$uri];
+    require basePath($routes[$uri]);
   } else {
     abort(Response::NOT_FOUND);
   }
