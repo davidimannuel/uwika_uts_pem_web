@@ -5,6 +5,7 @@
 <div class="container mt-4">
   <!-- Your content goes here -->
   <h1>Category Management</h1>
+  <a href="/category/create">Create Category</a>
   <ul>
     <?php foreach ($categories as $category): ?>
       <li>

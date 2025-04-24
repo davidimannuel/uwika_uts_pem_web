@@ -2,6 +2,7 @@
 
 class Database {
   public $connection;
+  public $statement;
 
   public function __construct($config) {
     // connect to postgresql database
@@ -14,10 +15,34 @@ class Database {
 
   public function query($query, $params = []) { 
 
-    $statement = $this->connection->prepare($query);
-    $statement->execute($params);
+    $this->statement = $this->connection->prepare($query);
+    $this->statement->execute($params);
 
-    return $statement;
+    return $this;
+  }
+
+  // fetch all rows
+  // return $this->statement->fetchAll(PDO::FETCH_ASSOC); // example of fetching all rows as associative array
+  // return $this->statement->fetchAll(PDO::FETCH_OBJ); // example of fetching all rows as objects
+  public function get() 
+  {
+    return $this->statement->fetchAll();
   }
   
+  // retrieve a single row
+  public function find()
+  {
+    return $this->statement->fetch();
+  }
+  
+  public function findOrFail()
+  {
+    $result = $this->find();
+    if (!$result) {
+      abort(404);
+    }
+
+    return $result;
+  }
+
 }

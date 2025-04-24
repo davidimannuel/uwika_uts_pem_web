@@ -4,6 +4,7 @@ function urlIs($path) {
   return $_SERVER['REQUEST_URI'] === $path ? true : false;
 }
 
+// var dump and die
 function dd($data) {
   echo "<pre>";
   var_dump($data);

@@ -1,15 +1,6 @@
 <?php 
 
-$uri = parse_url($_SERVER['REQUEST_URI'])["path"];
-
-$routes = [
-  "/" => "controllers/index.php",
-  "/categories" => "controllers/categories.php",
-  "/category" => "controllers/category.php",
-  "/items" => "controllers/item.php",
-  "/inbounds" => "controllers/inbounds.php",
-  "/outbounds" => "controllers/outbounds.php"
-];
+$routes = require("routes.php");
 
 function abort($code = Response::INTERNAL_SERVER_ERROR) {
   http_response_code($code);
@@ -25,4 +16,5 @@ function routeToController($uri, $routes) {
   }
 }
 
+$uri = parse_url($_SERVER['REQUEST_URI'])["path"];
 routeToController($uri,$routes);

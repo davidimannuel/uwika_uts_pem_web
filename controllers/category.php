@@ -9,7 +9,7 @@ if (!$categoryId) {
     abort();
 }
 
-$category = $db->query("SELECT * FROM item_categories where id = :id",[':id' => $categoryId])->fetch();
+$category = $db->query("SELECT * FROM item_categories where id = :id",[':id' => $categoryId])->findOrFail();
 // dd($category);
 
 require "views/category.view.php";
