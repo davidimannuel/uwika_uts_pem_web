@@ -1,10 +1,11 @@
 <?php
 
+use Core\App;
 use Core\Database;
 
 $config = require basePath("config.php");
 
-$db = new Database($config['database']);
+$db = App::resolve(Database::class);
 
 $categoryId = $_GET['id'] ?? null;
 if (!$categoryId) {
@@ -12,8 +13,7 @@ if (!$categoryId) {
 }
 
 $category = $db->query("SELECT * FROM item_categories where id = :id",[':id' => $categoryId])->findOrFail();
-// dd($category);
 
-view("item_categories/show.view.php", [
+view("item_categories/edit.view.php", [
     "category" => $category
 ]);

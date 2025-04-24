@@ -4,16 +4,17 @@
   
 <div class="container mt-4">
   <!-- Your content goes here -->
-  <h1>Create Item Category</h1>
+  <h1>Edit Item Category</h1>
   <a href="/item-categories" class="btn btn-success">Back to Categories</a>
   <div class="row">
     <div class="col-md-6">
-      <form action="/item-categories/store" method="POST">
+      <form action="/item-category/update" method="POST">
+        <input type="hidden" name="id" value="<?= $category['id'] ?>">
         <label for="name" class="form-label">Name</label>
         <input type="text" 
           name="name"
           placeholder="Name" 
-          value="<?= isset($_POST['name']) ? $_POST['name'] : '' ?>" 
+          value="<?= htmlspecialchars($category['name']) ?>" 
           class="form-control">
         
         <?php if (isset($errors["name"])): ?>
@@ -24,7 +25,7 @@
 
         <input 
           type="submit" 
-          value="Create" 
+          value="Edit" 
           class="btn btn-primary mt-2">
       </form>
   </div>

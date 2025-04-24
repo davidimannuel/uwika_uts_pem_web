@@ -24,8 +24,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // Tangani error duplikasi dengan try-catch
   try {
-    $db->query("INSERT INTO item_categories (name) VALUES (:name)", [
-      "name" => $name
+    $now = DateTime::createFromFormat('U.u', microtime(true))->format('Y-m-d H:i:s.u');
+    
+    $db->query("UPDATE item_categories SET name = :name, updated_at = :updated_at WHERE id = :id", [
+      "name" => $name,
+      "updated_at" => $now,
+      "id" => $_POST["id"]
     ]);
     
     // Redirect ke halaman kategori jika berhasil
