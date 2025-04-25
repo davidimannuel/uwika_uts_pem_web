@@ -5,7 +5,7 @@
 <div class="container mt-4">
   <!-- Your content goes here -->
   <h1>Category Management</h1>
-  <a href="/item-categories/create" class="btn btn-success">Create Category</a>
+  <a href="/categories/create" class="btn btn-success">Create Category</a>
   <table class="table">
     <thead>
       <tr>
@@ -24,8 +24,8 @@
         <td><?= htmlspecialchars($category['name']) ?></td>
         <td>
           <div class="btn-group" role="group" aria-label="Action Buttons">
-            <a href="/item-category/edit?id=<?= $category['id'] ?>" class="btn btn-primary">Edit</a>
-            <form action="/item-category/delete" method="post" style="display: inline;">
+            <a href="/category/edit?id=<?= $category['id'] ?>" class="btn btn-primary">Edit</a>
+            <form action="/category/delete" method="post" style="display: inline;">
               <input type="hidden" name="id" value="<?= $category['id'] ?>">
               <button type="submit" class="btn btn-danger">Delete</button>
             </form>

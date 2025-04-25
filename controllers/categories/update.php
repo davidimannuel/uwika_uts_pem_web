@@ -17,19 +17,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // Jika ada error validasi, kembalikan ke form
   if (!empty($errors)) {
-    return view("item_categories/create.view.php", [
+    return view("categories/create.view.php", [
       "errors" => $errors,
     ]);
   }
 
   // Tangani error duplikasi dengan try-catch
   try {
-    $db->query("INSERT INTO item_categories (name) VALUES (:name)", [
-      "name" => $name
+    $now = DateTime::createFromFormat('U.u', microtime(true))->format('Y-m-d H:i:s.u');
+    
+    $db->query("UPDATE categories SET name = :name, updated_at = :updated_at WHERE id = :id", [
+      "name" => $name,
+      "updated_at" => $now,
+      "id" => $_POST["id"]
     ]);
     
     // Redirect ke halaman kategori jika berhasil
-    header("Location: /item-categories");
+    header("Location: /categories");
     return ;
   } catch (PDOException $e) {
     // Tangkap error duplikasi
@@ -40,11 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       $errors["general"] = "An unexpected error occurred.";
     }
     // Kembalikan ke form dengan pesan error
-    return view("item_categories/create.view.php", [
+    return view("categories/create.view.php", [
       "errors" => $errors,
     ]);
   }
 } 
 
-header('location: /item-categories');
+header('location: /categories');
 die();

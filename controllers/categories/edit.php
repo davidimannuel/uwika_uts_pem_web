@@ -12,8 +12,8 @@ if (!$categoryId) {
     abort();
 }
 
-$category = $db->query("SELECT * FROM item_categories where id = :id",[':id' => $categoryId])->findOrFail();
+$category = $db->query("SELECT * FROM categories where id = :id",[':id' => $categoryId])->findOrFail();
 
-view("item_categories/edit.view.php", [
+view("categories/edit.view.php", [
     "category" => $category
 ]);

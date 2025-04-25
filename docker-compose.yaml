@@ -1,6 +1,6 @@
 services:
-  go_todo_app_postgres:
-    container_name: go_todo_app_postgres
+  postgres:
+    container_name: pem_web_postgres
     image: postgres:14.1-alpine
     restart: always
     environment:

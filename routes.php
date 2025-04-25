@@ -15,15 +15,29 @@ return [
   "/" => "controllers/index.php",
   
   // item categories
-  "/item-categories" => "controllers/item_categories/index.php",
-  "/item-category" => "controllers/item_categories/show.php",
-  "/item-categories/create" => "controllers/item_categories/create.php",
-  "/item-categories/store" => "controllers/item_categories/store.php",
-  "/item-category/edit" => "controllers/item_categories/edit.php",
-  "/item-category/update" => "controllers/item_categories/update.php",
-  "/item-category/delete" => "controllers/item_categories/destroy.php",
+  "/categories" => "controllers/categories/index.php",
+  "/category" => "controllers/categories/show.php",
+  "/categories/create" => "controllers/categories/create.php",
+  "/categories/store" => "controllers/categories/store.php",
+  "/category/edit" => "controllers/categories/edit.php",
+  "/category/update" => "controllers/categories/update.php",
+  "/category/delete" => "controllers/categories/destroy.php",
   
-  // "/items" => "controllers/item.php",
-  // "/inbounds" => "controllers/inbounds.php",
-  // "/outbounds" => "controllers/outbounds.php"
+  // Items
+  "/items" => "controllers/items/index.php",
+  "/items/create" => "controllers/items/create.php",
+  "/items/store" => "controllers/items/store.php",
+  "/item/edit" => "controllers/items/edit.php",
+  "/item/update" => "controllers/items/update.php",
+  "/item/delete" => "controllers/items/destroy.php",
+
+  // Inbounds
+  "/inbounds" => "controllers/inbounds/index.php",
+  "/inbounds/create" => "controllers/inbounds/create.php",
+  "/inbounds/store" => "controllers/inbounds/store.php",
+
+  // Outbounds
+  "/outbounds" => "controllers/outbounds/index.php",
+  "/outbounds/create" => "controllers/outbounds/create.php",
+  "/outbounds/store" => "controllers/outbounds/store.php",
 ];
