@@ -13,6 +13,9 @@ class Validator
 
     public static function greaterThan(int $value, int $greaterThan): bool
     {
+        if ($value === null) {
+            return false;
+        }
         return $value > $greaterThan;
     }
 }

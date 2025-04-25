@@ -5,25 +5,41 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+-- seed data
+INSERT INTO categories (name) VALUES
+('Makanan'),
+('Minuman'),
+('Snack');
+
+
 -- 2. Table: items
 CREATE TABLE items (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     category_id INTEGER NOT NULL REFERENCES categories(id) ON DELETE CASCADE,
-    unit VARCHAR(10) NOT NULL, -- Allowed: 'PCS', 'CARTON' (handled by PHP)
-    pcs_per_carton INTEGER, -- Nullable: Required only if unit is 'CARTON'
-    stock INTEGER DEFAULT 0,
+    unit VARCHAR(10) NOT NULL, -- Allowed: 'PCS', 'PACK' (handled by PHP)
+    pcs_per_pack INTEGER, -- Nullable: Required only if unit is 'PACK'
+    pcs_stock INTEGER DEFAULT 0,
+    pack_stock INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- seed data
+INSERT INTO items (name, category_id, unit, pcs_per_pack, pcs_stock, pack_stock) VALUES
+('Indomie', 1, 'PACK', 5, 0, 0),
+('Teh Botol', 2, 'PCS', NULL, 0, 0),
+('Coklat', 3, 'PACK', 10, 0, 0);
+
 
 -- 3. Table: inbounds (updated)
 CREATE TABLE inbounds (
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
-    quantity INTEGER NOT NULL,
+    pack_quantity INTEGER NOT NULL,
+    pcs_quantity INTEGER NOT NULL,
     unit VARCHAR(10) NOT NULL,           -- 'PCS' or 'CARTON' (handled by PHP)
-    pcs_per_carton INTEGER,              -- Nullable: filled when unit item is 'CARTON'
+    pcs_per_pack INTEGER,              -- Nullable: filled when unit item is 'CARTON'
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -33,9 +49,9 @@ CREATE TABLE inbounds (
 CREATE TABLE outbounds (
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
-    quantity INTEGER NOT NULL,
+    pack_quantity INTEGER NOT NULL,
     unit VARCHAR(10) NOT NULL,           -- 'PCS' or 'CARTON' (handled by PHP)
-    pcs_per_carton INTEGER,              -- Nullable: filled when unit item is 'CARTON'
+    pcs_per_pack INTEGER,              -- Nullable: filled when unit item is 'CARTON'
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

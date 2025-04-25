@@ -1,10 +1,9 @@
 <?php require basePath("views/partials/head.php"); ?>
 <?php require basePath("views/partials/nav.php"); ?>
-<?php require basePath("controllers/items/constants.php"); ?>
 
 <div class="container mt-4">
   <h1>Items Management</h1>
-  <a href="/items/create" class="btn btn-success">Create Item</a>
+  <a href="/items/create" class="btn btn-success mb-3">Create Item</a>
   <table class="table">
     <thead>
       <tr>
@@ -12,7 +11,8 @@
         <th>Name</th>
         <th>Category</th>
         <th>Unit</th>
-        <th>Stock</th>
+        <th>PCS Stock</th>
+        <th>PACK Stock</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -25,9 +25,10 @@
         <td><?= htmlspecialchars($item['category_name']) ?></td>
         <td>
           <?= htmlspecialchars($item['unit']) ?>
-          <?= ($item['unit'] == UNIT_CARTON && $item['pcs_per_carton'] > 0) ? "({$item['pcs_per_carton']} PCS)": "" ?>
+          <?= ($item['unit'] == 'PACK' && $item['pcs_per_pack'] > 0) ? " ({$item['pcs_per_pack']} PCS)" : "" ?>
         </td>
-        <td><?= htmlspecialchars($item['stock']) ?></td>
+        <td><?= htmlspecialchars($item['pcs_stock']) ?></td>
+        <td><?= htmlspecialchars($item['pack_stock']) ?></td>
         <td>
           <div class="btn-group">
             <a href="/item/edit?id=<?= $item['id'] ?>" class="btn btn-primary">Edit</a>
