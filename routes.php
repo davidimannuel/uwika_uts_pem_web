@@ -31,13 +31,8 @@ return [
   "/item/update" => "controllers/items/update.php",
   "/item/delete" => "controllers/items/destroy.php",
 
-  // Inbounds
-  "/inbounds" => "controllers/inbounds/index.php",
-  "/inbounds/create" => "controllers/inbounds/create.php",
-  "/inbounds/store" => "controllers/inbounds/store.php",
-
-  // Outbounds
-  "/outbounds" => "controllers/outbounds/index.php",
-  "/outbounds/create" => "controllers/outbounds/create.php",
-  "/outbounds/store" => "controllers/outbounds/store.php",
+  // Stock transactions
+  "/stock-transactions" => "controllers/stock_transactions/index.php",
+  "/stock-transactions/create" => "controllers/stock_transactions/create.php",
+  "/stock-transactions/store" => "controllers/stock_transactions/store.php",
 ];

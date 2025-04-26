@@ -1,5 +1,6 @@
 <?php require basePath("views/partials/head.php"); ?>
 <?php require basePath("views/partials/nav.php"); ?>
+<?php use Models\Item; ?>
 
 <div class="container mt-4">
   <h1>Items Management</h1>
@@ -25,9 +26,11 @@
         <td><?= htmlspecialchars($item['category_name']) ?></td>
         <td>
           <?= htmlspecialchars($item['unit']) ?>
-          <?= ($item['unit'] == 'PACK' && $item['pcs_per_pack'] > 0) ? " ({$item['pcs_per_pack']} PCS)" : "" ?>
+          <?= ($item['unit'] == Item::UNIT_PACK && $item['pcs_per_pack'] > 0) ? " ({$item['pcs_per_pack']} PCS)" : "" ?>
         </td>
-        <td><?= htmlspecialchars($item['pcs_stock']) ?></td>
+        <td>
+          <?= ( ($item['unit'] == Item::UNIT_PACK) && !($item["pcs_per_pack"] > 0) ) ? "-" : htmlspecialchars($item['pcs_stock']) ?>
+        </td>
         <td><?= htmlspecialchars($item['pack_stock']) ?></td>
         <td>
           <div class="btn-group">

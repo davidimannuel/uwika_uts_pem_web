@@ -16,10 +16,7 @@
           <a class="nav-link <?=  urlIs("/items") ? 'active' : '' ?>" href="/items">Items</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <?=  urlIs("/inbounds") ? 'active' : '' ?>" href="inbounds">Inbounds</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link <?=  urlIs("/outbounds") ? 'active' : '' ?>" href="outbounds">Outbounds</a>
+          <a class="nav-link <?=  urlIs("/stock-transactions") ? 'active' : '' ?>" href="/stock-transactions">Stock Transactions</a>
         </li>
       </ul>
     </div>

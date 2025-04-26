@@ -81,30 +81,41 @@ class Item
     if ($qPcs < 0) {
       throw new \InvalidArgumentException("PCS value must be a non-negative integer.");
     }
+    $isSuportPack = ( ($this->unit  === self::UNIT_PACK) && ($this->pcsPerPack > 0));
     
-    $qPack = 0;
-    // Convert PCS to PACK if applicable
-    if ($this->pcsPerPack !== null && $qPcs > $this->pcsPerPack) {
-      $qPack = intdiv($qPcs, $this->pcsPerPack);// to floor rounding integer division // 20 / 12 = 1
-      $qPcs = $qPcs % $this->pcsPerPack; // 20 % 12 = 8
-    }
-    // dd(['pcs' => $qPcs, 'pack' => $qPack]);
-    if ($isIncrease) {
-      $this->pcsStock += $qPcs;
-      $this->packStock += $qPack;
-      // dd(['pcsStock' => $this->pcsStock, 'packStock' => $this->packStock]);
-    } else {
-      // check packStock first
-      $this->packStock -= $qPack; // only decrease pack stock if qPack > 0
-      if ($this->packStock < 0) { 
-        return false; // Not enough PACK stock to decrease
-      }
-      $this->pcsStock -= $qPcs;
-      if ($this->pcsStock < 0) {
-        return false; // Not enough PCS stock to decrease
-      }
+    if ($isSuportPack) {
+      $this->pcsStock += $this->packStock * $this->pcsPerPack; // Update pcsStock based on packStock
+      $this->packStock = 0; // Reset packStock to 0
     }
 
+    if ($isIncrease) {
+      $this->pcsStock += $qPcs;
+    } else {
+      $this->pcsStock -= $qPcs;
+    }
+    if ($this->pcsStock < 0) {
+      return false; // Not enough PCS stock to decrease
+    }
+    // dd([
+    //   "qPcs" => $qPcs,
+    //   "isSuportPack" => $isSuportPack,
+    //   "unit" => $this->unit,
+    //   "pcsPerPack" => $this->pcsPerPack,
+    //   "pcsStock" => $this->pcsStock,
+    // ]);
+
+    // adjust pack stock and pcs stock if unit is PACK
+    $currentPcsStock = $this->pcsStock;
+    if ($isSuportPack) {
+      $this->packStock = intdiv($currentPcsStock, $this->pcsPerPack);// to floor rounding integer division // 20 / 12 = 1
+      $this->pcsStock = $currentPcsStock % $this->pcsPerPack; // 20 % 12 = 8
+    }
+
+    // dd([
+    //   "qPcs" => $qPcs,
+    //   "currenItem" => $this,
+    // ]);
+    
     return true;
   }
 

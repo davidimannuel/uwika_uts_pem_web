@@ -31,29 +31,18 @@ INSERT INTO items (name, category_id, unit, pcs_per_pack, pcs_stock, pack_stock)
 ('Teh Botol', 2, 'PCS', NULL, 0, 0),
 ('Coklat', 3, 'PACK', 10, 0, 0);
 
-
--- 3. Table: inbounds (updated)
-CREATE TABLE inbounds (
+-- 3. Table: stock_transactions (tambah / kurang stok)
+CREATE TABLE stock_transactions (
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
-    pack_quantity INTEGER NOT NULL,
-    pcs_quantity INTEGER NOT NULL,
+    type VARCHAR(10) NOT NULL, -- Allowed: 'INBOUND', 'OUTBOUND'
+    pack_quantity INTEGER NOT NULL DEFAULT 0,
+    pcs_quantity INTEGER NOT NULL DEFAULT 0,
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Table: outbounds (updated)
-CREATE TABLE outbounds (
-    id SERIAL PRIMARY KEY,
-    item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
-    pack_quantity INTEGER NOT NULL,
-    note TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-DROP TABLE inbounds;
-DROP TABLE outbounds;
+DROP TABLE stock_transactions;
 DROP TABLE items;
 DROP TABLE categories;
