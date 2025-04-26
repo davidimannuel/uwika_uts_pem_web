@@ -1,6 +1,5 @@
 <?php require basePath("views/partials/head.php"); ?>
 <?php require basePath("views/partials/nav.php"); ?>
-<?php require basePath("controllers/items/constants.php"); ?>
 
 <div class="container mt-4">
   <h1>Create Inbound</h1>
@@ -17,29 +16,27 @@
   <form action="/inbounds/store" method="POST">
     <div class="mb-3">
       <label for="item_id" class="form-label">Item</label>
-      <select class="form-control" id="item_id" name="item_id" required>
+      <select class="form-control <?= isset($errors['item_id']) ? 'is-invalid' : '' ?>" id="item_id" name="item_id" required>
         <?php foreach ($items as $item): ?>
-          <option value="<?= $item['id'] ?>">
-            <?= htmlspecialchars($item['name'] . " / " . $item['unit']) ?>
-            <?= ($item['unit'] == "CARTON" && $item['pcs_per_carton'] > 0) ? " / {$item['pcs_per_carton']} PCS" : "" ?>
+          <option value="<?= $item['id'] ?>" <?= (isset($_POST['item_id']) && $_POST['item_id'] == $item['id']) ? 'selected' : '' ?>>
+            <?= htmlspecialchars($item['name']) ?>
+            <?= ($item['pcs_per_pack'] > 0) ? " / {$item['pcs_per_pack']} PCS" : "" ?>
+            <?= " / " . $item['unit'] ?>
           </option>
         <?php endforeach; ?>
       </select>
     </div>
     <div class="mb-3">
-      <label for="quantity" class="form-label">Quantity</label>
-      <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+      <label for="pack_quantity" class="form-label">Pack Quantity</label>
+      <input type="number" class="form-control <?= isset($errors['pack_quantity']) ? 'is-invalid' : '' ?>" id="pack_quantity" name="pack_quantity" value="<?= htmlspecialchars($_POST['pack_quantity'] ?? '') ?>" min="0">
     </div>
     <div class="mb-3">
-      <label for="unit" class="form-label">Unit</label>
-      <select class="form-control" id="unit" name="unit" required>
-        <option value="<?= UNIT_PCS ?>">PCS</option>
-        <option value="<?= UNIT_CARTON ?>">CARTON</option>
-      </select>
+      <label for="pcs_quantity" class="form-label">PCS Quantity</label>
+      <input type="number" class="form-control <?= isset($errors['pcs_quantity']) ? 'is-invalid' : '' ?>" id="pcs_quantity" name="pcs_quantity" value="<?= htmlspecialchars($_POST['pcs_quantity'] ?? '') ?>" min="0">
     </div>
     <div class="mb-3">
       <label for="note" class="form-label">Note</label>
-      <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+      <textarea class="form-control <?= isset($errors['note']) ? 'is-invalid' : '' ?>" id="note" name="note" rows="3"><?= htmlspecialchars($_POST['note'] ?? '') ?></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
   </form>

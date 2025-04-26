@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if (!empty($errors)) {
     return view("items/create.view.php", [
       "errors" => $errors,
+      "categories" => $db->query("SELECT * FROM categories")->get(),
     ]);
   }
   

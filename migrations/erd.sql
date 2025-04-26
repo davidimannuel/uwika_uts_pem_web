@@ -38,8 +38,6 @@ CREATE TABLE inbounds (
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     pack_quantity INTEGER NOT NULL,
     pcs_quantity INTEGER NOT NULL,
-    unit VARCHAR(10) NOT NULL,           -- 'PCS' or 'CARTON' (handled by PHP)
-    pcs_per_pack INTEGER,              -- Nullable: filled when unit item is 'CARTON'
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -50,8 +48,6 @@ CREATE TABLE outbounds (
     id SERIAL PRIMARY KEY,
     item_id INTEGER NOT NULL REFERENCES items(id) ON DELETE CASCADE,
     pack_quantity INTEGER NOT NULL,
-    unit VARCHAR(10) NOT NULL,           -- 'PCS' or 'CARTON' (handled by PHP)
-    pcs_per_pack INTEGER,              -- Nullable: filled when unit item is 'CARTON'
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

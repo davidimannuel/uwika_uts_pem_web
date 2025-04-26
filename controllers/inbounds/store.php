@@ -1,95 +1,112 @@
 <?php
 use Core\App;
 use Core\Database;
+use Core\Sanitizer;
 use Core\Validator;
+use Models\Item;
 
 $db = App::resolve(Database::class);
 
 $errors = [];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  
-  $itemId = $_POST["item_id"];
-  
-  $currentItem = $db->query("SELECT * FROM items WHERE id = :id", ['id' => $itemId])->findOrFail();
-  
-  $quantity = $_POST["quantity"];
-  $unit = $_POST["unit"];
-  $pcsPerCarton = $currentItem["pcs_per_carton"];
-  $note = $_POST["note"] ?? null;
+    $itemId = $_POST["item_id"] ?? null;
+    $packQuantity = $_POST["pack_quantity"] ?? 0;
+    $pcsQuantity = $_POST["pcs_quantity"] ?? 0;
+    $note = Sanitizer::emptyToDefault($_POST["note"] ?? null, null);
 
-  // Validasi input
-  if ($unit === "PCS" && $currentItem["unit"] === "CARTON" && !($pcsPerCarton > 0)) {
-    $errors["unit"] = "PCS per carton must be set";
-  }
+    // Ambil data item dari database
+    $currentItemDb = $db->query("SELECT * FROM items WHERE id = :id", ['id' => $itemId])->findOrFail();
 
-  if ($itemId <= 0) {
-    $errors["item_id"] = "Item is required.";
-  }
-  if ($quantity <= 0) {
-    $errors["quantity"] = "Quantity must be a positive number.";
-  }
-  if (!in_array($unit, ["PCS", "CARTON"])) {
-    $errors["unit"] = "Unit must be 'PCS' or 'CARTON'.";
-  }
+    $currentItem = new Item($currentItemDb);
 
-  if (!empty($errors)) {
-    return view("inbounds/create.view.php", [
-      "errors" => $errors,
-    ]);
-  }
-  // convert pcs to carton
-  
-  // https://www.php.net/manual/en/pdo.transactions.php
-  try {
-    // TODO tidy up transactional database
-    // Mulai transaksi
-    $dbConn = $db->connection;
-    $dbConn->beginTransaction();
-    // insert into inbounds table
-    $createStatement = $dbConn->prepare("
-      INSERT INTO inbounds (item_id, quantity, unit, pcs_per_carton, note) 
-      VALUES (:item_id, :quantity, :unit, :pcs_per_carton, :note)
-    ");
-    $createStatement->execute([
-      "item_id" => $itemId,
-      "quantity" => $quantity,
-      "unit" => $unit,
-      "pcs_per_carton" => $pcsPerCarton,
-      "note" => $note,
-    ]);
+    // Validasi input
+    if (!$itemId || $itemId <= 0) {
+        $errors["item_id"] = "Item is required.";
+    }
+    if ($packQuantity <= 0 || $pcsQuantity <= 0) {
+        $errors["quantity"] = "Quantity must be a positive number.";
+    }
+    if ($currentItem->unit == Item::UNIT_PCS && $packQuantity > 0) {
+        $errors["pack_quantity"] = "Item with unit PCS cannot have pack quantity.";
+    }
+    if ($currentItem->unit == Item::UNIT_PACK && !($currentItem->pcsPerPack > 0) && $pcsQuantity > 0) {
+        $errors["pcs_quantity"] = "Item with doesn't have pcs_per_pack";
+    }
+    
+    // adjust stock
+    if ($currentItem->unit == Item::UNIT_PCS) {
+      $currentItem->adjustPcsStock($pcsQuantity);
+    } elseif ($currentItem->unit == Item::UNIT_PACK) {
+      // adjust pcs stock first
+      if ($currentItem->pcsPerPack > 0 && $pcsQuantity > 0) {
+        // dd([
+        //   "packQuantity" => $packQuantity,
+        //   "pcsQuantity" => $pcsQuantity,
+        // ]);
+        $success = $currentItem->adjustPcsStock($pcsQuantity);
+        if (!$success) {
+          $errors["pcs_quantity"] = "stock not sufficient";
+        }
+      }
+      // dd($currentItem);
+      // adjust pack stock
+      $success = $currentItem->adjustPackStock($packQuantity);
+      if (!$success) {
+        $errors["pack_quantity"] = "stock not sufficient";
+      }
+    }
+    
+    
+    if (!empty($errors)) {
+        return view("inbounds/create.view.php", [
+            "errors" => $errors,
+            "items" => $db->query("SELECT id, name, unit, pcs_per_pack FROM items")->get(),
+        ]);
+    }
 
-    // update stock in items table
-    $updateStatement = $dbConn->prepare("
-      UPDATE items 
-      SET stock = stock + :quantity
-      WHERE id = :id
-    ");
-    $updateStatement->execute([
-      "id" => $itemId,
-      "quantity" => $quantity,
-    ]);
+    // Proses transaksi menggunakan metode transaction
+    try {
+        $db->transaction(function ($db) use ($currentItem, $packQuantity, $pcsQuantity, $note) {
+            // Insert ke tabel inbounds
+            $db->query("
+                INSERT INTO inbounds (item_id, pack_quantity, pcs_quantity, note) 
+                VALUES (:item_id, :pack_quantity, :pcs_quantity, :note)
+            ", [
+                "item_id" => $currentItem->id,
+                "pack_quantity" => $packQuantity,
+                "pcs_quantity" => $pcsQuantity,
+                "note" => $note,
+            ]);
 
-    // Commit transaksi jika semua berhasil
-    $dbConn->commit();
+            // Update stok di tabel items
+            $db->query("
+                UPDATE items
+                SET
+                  pcs_stock = :pcs_stock,
+                  pack_stock = :pack_stock,
+                  updated_at = NOW()
+                WHERE id = :id
+            ", [
+                "id" => $currentItem->id,
+                "pcs_stock" => $currentItem->pcsStock,
+                "pack_stock" => $currentItem->packStock,
+            ]);
+        });
 
+        // Redirect jika berhasil
+        header("Location: /inbounds");
+        exit;
+    } catch (Exception $e) {
+        // Tambahkan pesan error jika terjadi kesalahan
+        $errors["general"] = "An error occurred while processing the transaction: " . $e->getMessage();
+
+        return view("inbounds/create.view.php", [
+            "errors" => $errors,
+            "items" => $db->query("SELECT id, name, unit, pcs_per_pack FROM items")->get(),
+        ]);
+    }
+} else {
     header("Location: /inbounds");
     exit;
-  } catch (Exception $e) {
-    // Rollback transaksi jika terjadi error
-    $dbConn->rollBack();
-
-    // Tambahkan pesan error
-    $errors["general"] = "An error occurred while processing the transaction: " . $e->getMessage();
-
-    return view("inbounds/create.view.php", [
-      "errors" => $errors,
-    ]);
-  }
-
-  header("Location: /inbounds");
-  exit;
-} else {
-  header("Location: /inbounds");
-  exit;
 }

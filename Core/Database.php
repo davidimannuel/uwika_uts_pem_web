@@ -2,6 +2,7 @@
 
 namespace Core;
 
+use Exception;
 use PDO;
 
 class Database 
@@ -48,5 +49,31 @@ class Database
     }
 
     return $result;
+  }
+
+  // execute transaction in a closure
+  // example usage:
+  // $db->transaction(function($db) {
+  //   $db->query("INSERT INTO items (name, unit) VALUES (:name, :unit)", [
+  //     "name" => "Item Name",
+  //     "unit" => "PCS"
+  //   ]);
+  //   $db->query("INSERT INTO items (name, unit) VALUES (:name, :unit)", [
+  //     "name" => "Item Name 2",
+  //     "unit" => "CARTON"
+  //   ]);
+  // });
+  // https://www.php.net/manual/en/pdo.transactions.php
+  public function transaction(callable $callback)
+  {
+      try {
+          $this->connection->beginTransaction();
+          $result = $callback($this);
+          $this->connection->commit();
+          return $result;
+      } catch (Exception $e) {
+          $this->connection->rollBack();
+          throw $e;
+      }
   }
 }

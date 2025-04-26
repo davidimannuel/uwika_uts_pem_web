@@ -3,14 +3,15 @@
 
 <div class="container mt-4">
   <h1>Inbound Management</h1>
-  <a href="/inbounds/create" class="btn btn-success">Create Inbound</a>
+  <a href="/inbounds/create" class="btn btn-success mb-3">Create Inbound</a>
   <table class="table">
     <thead>
       <tr>
         <th>#</th>
         <th>Item</th>
-        <th>Quantity</th>
         <th>Unit</th>
+        <th>Pack Quantity</th>
+        <th>PCS Quantity</th>
         <th>Note</th>
         <th>Created At</th>
       </tr>
@@ -21,11 +22,12 @@
       <tr>
         <td><?= $rowNumber++ ?></td>
         <td><?= htmlspecialchars($inbound['item_name']) ?></td>
-        <td><?= htmlspecialchars($inbound['quantity']) ?></td>
+        <td><?= htmlspecialchars($inbound['item_unit']) ?></td>
         <td>
-          <?= htmlspecialchars($inbound['unit']) ?>
-          <?= ($inbound['unit'] == 'CARTON' && $inbound['pcs_per_carton'] > 0) ? "({$inbound['pcs_per_carton']} PCS)": "" ?>
+          <?= htmlspecialchars($inbound['pack_quantity']) ?>
+          <?= ($inbound['item_pcs_per_pack'] > 0) ? " ({$inbound['item_pcs_per_pack']} PCS per PACK)" : "" ?>
         </td>
+        <td><?= htmlspecialchars($inbound['pcs_quantity']) ?></td>
         <td><?= htmlspecialchars($inbound['note']) ?></td>
         <td><?= htmlspecialchars($inbound['created_at']) ?></td>
       </tr>
