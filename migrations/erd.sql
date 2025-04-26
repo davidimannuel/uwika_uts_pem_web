@@ -29,7 +29,7 @@ CREATE TABLE items (
 INSERT INTO items (name, category_id, unit, pcs_per_pack, pcs_stock, pack_stock) VALUES
 ('Indomie', 1, 'PACK', 5, 0, 0),
 ('Teh Botol', 2, 'PCS', NULL, 0, 0),
-('Coklat', 3, 'PACK', 10, 0, 0);
+('Coklat', 3, 'PACK', NULL, 0, 0);
 
 -- 3. Table: stock_transactions (tambah / kurang stok)
 CREATE TABLE stock_transactions (

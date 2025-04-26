@@ -70,8 +70,20 @@
               <tr>
                 <td><?= $rowNumber++ ?></td>
                 <td><?= htmlspecialchars($transaction['type']) ?></td>
-                <td><?= htmlspecialchars($transaction['pack_quantity']) ?></td>
-                <td><?= htmlspecialchars($transaction['pcs_quantity']) ?></td>
+                <td>
+                  <?= $transaction['pack_quantity'] == 0 
+                      ? '<span class="badge bg-secondary">N/A</span>' 
+                      : ($transaction['type'] === 'OUTBOUND' 
+                          ? '<span class="badge bg-danger">-' . htmlspecialchars($transaction['pack_quantity']) . '</span>' 
+                          : '<span class="badge bg-success">+' . htmlspecialchars($transaction['pack_quantity']) . '</span>') ?>
+                </td>
+                <td>
+                  <?= $transaction['pcs_quantity'] == 0 
+                      ? '<span class="badge bg-secondary">N/A</span>' 
+                      : ($transaction['type'] === 'OUTBOUND' 
+                          ? '<span class="badge bg-danger">-' . htmlspecialchars($transaction['pcs_quantity']) . '</span>' 
+                          : '<span class="badge bg-success">+' . htmlspecialchars($transaction['pcs_quantity']) . '</span>') ?>
+                </td>
                 <td><?= htmlspecialchars($transaction['note'] ?? '') ?></td>
                 <td><?= htmlspecialchars($transaction['created_at']) ?></td>
               </tr>
@@ -108,14 +120,18 @@
               <?php endforeach; ?>
             </select>
           </div>
-          <div class="mb-3">
-            <label for="pack_quantity" class="form-label">Pack Quantity</label>
-            <input type="number" class="form-control" id="pack_quantity" name="pack_quantity" min="0">
-          </div>
-          <div class="mb-3">
-            <label for="pcs_quantity" class="form-label">PCS Quantity</label>
-            <input type="number" class="form-control" id="pcs_quantity" name="pcs_quantity" min="0">
-          </div>
+          <?php if ( ($currentItem['unit'] == Models\Item::UNIT_PCS) || ($currentItem['pcs_per_pack'] > 0) ): ?>
+            <div class="mb-3">
+              <label for="pcs_quantity" class="form-label">PCS Quantity</label>
+              <input type="number" class="form-control" id="pcs_quantity" name="pcs_quantity" min="0">
+            </div>
+          <?php endif; ?>
+          <?php if ($currentItem['unit'] == Models\Item::UNIT_PACK): ?>
+            <div class="mb-3">
+              <label for="pack_quantity" class="form-label">Pack Quantity</label>
+              <input type="number" class="form-control" id="pack_quantity" name="pack_quantity" min="0">
+            </div>
+          <?php endif; ?>
           <div class="mb-3">
             <label for="note" class="form-label">Note</label>
             <textarea class="form-control" id="note" name="note" rows="3"></textarea>

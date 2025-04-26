@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!empty($errors)) {
         return view("stock_transactions/index.view.php", [
             "errors" => $errors,
-            "transactions" => $db->query("SELECT * FROM stock_transactions WHERE item_id = :item_id", ['item_id' => $itemId])->get(),
+            "transactions" => $db->query("SELECT * FROM stock_transactions WHERE item_id = :item_id ORDER BY stock_transactions.created_at DESC", ['item_id' => $itemId])->get(),
             "items" => $db->query("SELECT id, name, unit, pcs_per_pack FROM items")->get(),
             "itemId" => $itemId,
             "type" => $type,
@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         return view("stock_transactions/index.view.php", [
             "errors" => $errors,
-            "transactions" => $db->query("SELECT * FROM stock_transactions WHERE item_id = :item_id", ['item_id' => $itemId])->get(),
+            "transactions" => $db->query("SELECT * FROM stock_transactions WHERE item_id = :item_id ORDER BY stock_transactions.created_at DESC", ['item_id' => $itemId])->get(),
             "items" => $db->query("SELECT id, name, unit, pcs_per_pack FROM items")->get(),
             "itemId" => $itemId,
             "type" => $type,

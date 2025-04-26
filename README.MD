@@ -55,10 +55,9 @@ Perlu diperhatikan **jumlah stok** dari masing-masing barang dan **kategorinya**
 ---
 
 ## Cara Menjalankan
-
 1. **Clone/download** project ini ke local server (XAMPP/Laragon/dsb).
-2. **Import database** menggunakan file SQL yang disediakan.
-3. **Set konfigurasi koneksi database** di file konfigurasi.
+2. **Import database** menggunakan file SQL yang disediakan (dump.sql).
+3. **Set konfigurasi koneksi database** di file konfigurasi (config.php).
 4. **Akses project via browser**.
 
 ---
